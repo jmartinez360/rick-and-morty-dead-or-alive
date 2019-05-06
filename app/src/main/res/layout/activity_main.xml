@@ -5,6 +5,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/deckBackground"
+
         tools:context=".ui.activities.MainActivity">
 
     <androidx.cardview.widget.CardView
@@ -13,6 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="16dp"
+            app:cardBackgroundColor="@color/cardDetail"
     >
 
 
@@ -21,6 +24,26 @@
                 android:layout_height="match_parent"
         >
 
+            <com.github.florent37.shapeofview.shapes.CutCornerView
+                    android:id="@+id/clipCorner"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:elevation="6dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:shape_cutCorner_bottomLeftSize="20dp">
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorPrimaryDark"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:text="No. 220"
+                />
+
+            </com.github.florent37.shapeofview.shapes.CutCornerView>
 
             <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline_horizontal_mid"
@@ -60,7 +83,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    app:layout_constraintGuide_percent="0.72"
+                    app:layout_constraintGuide_percent="0.74"
             />
 
             <androidx.constraintlayout.widget.Guideline
@@ -81,14 +104,19 @@
                     app:shape_arc_height="-40dp"
                     app:shape_arc_position="top"
                     app:layout_constraintTop_toBottomOf="@id/guideline_horizontal_title_top"
-                    app:layout_constraintBottom_toTopOf="@id/guideline_horizontal_title"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:orientation="vertical"
             >
-                <RelativeLayout
+
+                <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/colorPrimaryDark"
-                        android:gravity="center_horizontal|bottom"
-
+                        android:paddingTop="80dp"
+                        android:orientation="vertical"
+                        android:paddingBottom="16dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
                 >
 
                     <TextView
@@ -98,10 +126,96 @@
                             android:textStyle="bold"
                             android:textSize="24sp"
                             android:textColor="#fff"
-                            android:paddingBottom="8dp"
 
+                            android:paddingBottom="16dp"
+                            android:layout_gravity="center_horizontal"
                     />
-                </RelativeLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="#8BC34A"
+                            android:padding="16dp"
+                    >
+
+                        <TextView
+                                android:id="@+id/specie_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="SPECIES:"
+                                android:textStyle="bold"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                android:padding="4dp"
+                        />
+
+                        <TextView
+                                android:id="@+id/origin_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="ORIGIN:"
+                                android:textStyle="bold"
+                                android:padding="4dp"
+                                app:layout_constraintTop_toBottomOf="@id/specie_title"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                        />
+
+                        <TextView
+                                android:id="@+id/specie"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Human"
+                                android:textStyle="bold"
+                                android:padding="4dp"
+                                app:layout_constraintTop_toTopOf="@id/specie_title"
+                                app:layout_constraintLeft_toRightOf="@id/specie_title"
+                        />
+
+                        <TextView
+                                android:id="@+id/origin"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Earth (Replacement Dimension)"
+                                android:textStyle="bold"
+                                android:padding="4dp"
+                                app:layout_constraintTop_toTopOf="@id/origin_title"
+                                app:layout_constraintLeft_toRightOf="@id/specie_title"
+                        />
+
+                        <Button
+                                android:id="@+id/alive_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="ALIVE"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintHorizontal_bias="0.5"
+                                app:layout_constraintEnd_toStartOf="@+id/unknown_button"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <Button
+                                android:id="@+id/dead_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="DEAD"
+                                app:layout_constraintStart_toEndOf="@+id/unknown_button"
+                                app:layout_constraintHorizontal_bias="0.5"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <Button
+                                android:id="@+id/unknown_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="UNKNOWN"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@+id/alive_button"
+                                app:layout_constraintHorizontal_bias="0.5"
+                                app:layout_constraintEnd_toStartOf="@+id/dead_button"
+                        />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
             </com.github.florent37.shapeofview.shapes.ArcView>
 
 
@@ -119,6 +233,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="#fff">
+                    <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_male_gender"/>
 
                 </FrameLayout>
 
