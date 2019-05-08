@@ -24,6 +24,7 @@
                 android:layout_height="match_parent"
         >
 
+
             <com.github.florent37.shapeofview.shapes.CutCornerView
                     android:id="@+id/clipCorner"
                     android:layout_width="100dp"
@@ -34,9 +35,9 @@
                     app:shape_cutCorner_bottomLeftSize="20dp">
 
                 <TextView
+                        android:id="@+id/character_id"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/colorPrimaryDark"
                         android:gravity="center"
                         android:textStyle="bold"
                         android:textSize="18sp"
@@ -109,9 +110,9 @@
             >
 
                 <LinearLayout
+                        android:id="@+id/info_container"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/colorPrimaryDark"
                         android:paddingTop="80dp"
                         android:orientation="vertical"
                         android:paddingBottom="16dp"
@@ -241,8 +242,6 @@
                 </FrameLayout>
 
             </com.github.florent37.shapeofview.shapes.PolygonView>
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
