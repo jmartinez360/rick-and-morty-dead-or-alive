@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
 import com.dev.rickandmortydeadoralive.Injector
 import com.dev.rickandmortydeadoralive.R
 import com.dev.rickandmortydeadoralive.models.Character
@@ -15,6 +16,7 @@ import com.dev.rickandmortydeadoralive.ui.views.CharactersDeckView
 import com.dev.rickandmortydeadoralive.utils.cardColors.CardType
 import com.dev.rickandmortydeadoralive.utils.cardColors.GradientCardColor
 import com.yuyakaido.android.cardstackview.*
+import java.util.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener {
@@ -23,9 +25,9 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener 
     lateinit var presenter: CharactersDeckPresenter
 
     private val adapter by lazy { CharacterCardsAdapter() }
-    private val recycler by lazy { findViewById<RecyclerView>(R.id.characterRecycler) }
+    private val recycler by lazy { findViewById<CardStackView>(R.id.characterRecycler) }
+    private val resetButton by lazy { findViewById<TextView>(R.id.reset) }
     private val manager by lazy { CardStackLayoutManager(this, this) }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +36,8 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener 
         init()
 
         val gradientCardType = CardType.ZINC_CARD.cardColor as GradientCardColor
+
+        resetButton.setOnClickListener { presenter.loadCharacters() }
 
         presenter.view = this
         presenter.loadCharacters()
@@ -75,42 +79,57 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener 
     fun init() {
         manager.setStackFrom(StackFrom.None)
         manager.setVisibleCount(3)
-        manager.setTranslationInterval(8.0f)
+        manager.setTranslationInterval(20.0f)
         manager.setScaleInterval(0.95f)
         manager.setSwipeThreshold(0.3f)
-        manager.setMaxDegree(20.0f)
-        manager.setDirections(Direction.HORIZONTAL)
+        manager.setMaxDegree(50.0f)
+        manager.setDirections(Arrays.asList(Direction.Left, Direction.Top, Direction.Right))
         manager.setCanScrollHorizontal(true)
         manager.setCanScrollVertical(true)
         manager.setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
         manager.setOverlayInterpolator(LinearInterpolator())
+        //manager.setRewindAnimationSetting(rewindSetting)
 
         recycler.layoutManager = manager
         recycler.adapter = adapter
     }
-
+    
     override fun showCharacters(characterList: List<Character>) {
+        recycler.visibility = View.VISIBLE
         adapter.items = characterList
         adapter.notifyDataSetChanged()
-
     }
 
+    override fun hideDeck() {
+        recycler.visibility = View.GONE
+    }
+
+    override fun notifyWrongAnswer(direction: String) {
+        Toast.makeText(this, "mala opción", Toast.LENGTH_SHORT).show()
+    }
+
+
+
     override fun onCardDragging(direction: Direction?, ratio: Float) {
+
     }
 
     override fun onCardSwiped(direction: Direction?) {
+        presenter.onCardSwiped(direction?.name)
     }
 
     override fun onCardCanceled() {
     }
 
     override fun onCardAppeared(view: View?, position: Int) {
+        presenter.onCurrentCard(position)
     }
 
     override fun onCardRewound() {
+        Log.d("dev rick and morty", "vuelvo a la carta anterior")
     }
 
     override fun onCardDisappeared(view: View?, position: Int) {
-        Log.d("rick and morty", "Acabo de esconder la carta de " + adapter.items!![position])
+        presenter.onCardDisappeared(position)
     }
 }
