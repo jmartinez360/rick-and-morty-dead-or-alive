@@ -13,11 +13,14 @@ import com.dev.rickandmortydeadoralive.models.Character
 import com.dev.rickandmortydeadoralive.ui.adapters.CharacterCardsAdapter
 import com.dev.rickandmortydeadoralive.ui.presenters.CharactersDeckPresenter
 import com.dev.rickandmortydeadoralive.ui.views.CharactersDeckView
+import com.dev.rickandmortydeadoralive.utils.CustomDialog
+import com.dev.rickandmortydeadoralive.utils.CustomDialogClickListener
 import com.dev.rickandmortydeadoralive.utils.cardColors.CardType
 import com.dev.rickandmortydeadoralive.utils.cardColors.GradientCardColor
 import com.yuyakaido.android.cardstackview.*
 import java.util.*
 import javax.inject.Inject
+
 
 class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener {
 
@@ -93,7 +96,7 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener 
         recycler.layoutManager = manager
         recycler.adapter = adapter
     }
-    
+
     override fun showCharacters(characterList: List<Character>) {
         recycler.visibility = View.VISIBLE
         adapter.items = characterList
@@ -104,11 +107,21 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener 
         recycler.visibility = View.GONE
     }
 
-    override fun notifyWrongAnswer(direction: String) {
-        Toast.makeText(this, "mala opción", Toast.LENGTH_SHORT).show()
+    override fun notifyLifeLost() {
+        Toast.makeText(this, "Pierdes una vida", Toast.LENGTH_LONG).show()
     }
 
+    override fun notifyWrongAnswer(direction: String) {
 
+        val customDialog = CustomDialog(this,R.drawable.game_over_1, "Game Over!!", "Has perdido tus vidas",
+            object : CustomDialogClickListener {
+                override fun onButtonClickListener() {
+                    presenter.loadCharacters()
+                }
+            })
+
+        customDialog.showDialog()
+    }
 
     override fun onCardDragging(direction: Direction?, ratio: Float) {
 

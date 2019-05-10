@@ -18,18 +18,21 @@ class CharactersDeckPresenter @Inject constructor (private val charaterRepositor
         private val LEFT_SWIPE = "Left"
         private val TOP_SWIPE = "Top"
         private val UNKNOWN = "Unknown"
+        private val MAX_LIFES = 3
     }
 
     lateinit var view: CharactersDeckView
     private var disposable: Disposable? = null
     private var charactersList : List<Character> = emptyList()
     private var correctSwipeDirection : String? = null
+    private var lifeCount = MAX_LIFES
 
     override fun setView(view: View) {
         this.view = view as CharactersDeckView
     }
 
     fun loadCharacters() {
+        lifeCount = MAX_LIFES
         val ids = RandomUtils.getRandomNumberList(LIST_SIZE)
         disposable = charaterRepository.getCharacters(ids)
             .observeOn(schedulerProvider.ui())
@@ -56,7 +59,11 @@ class CharactersDeckPresenter @Inject constructor (private val charaterRepositor
 
     fun onCardSwiped(direction: String?) {
         if (!direction.equals(correctSwipeDirection)) {
-            view.notifyWrongAnswer(direction!!)
+            lifeCount--
+            view.notifyLifeLost()
+            if (lifeCount == 0) {
+                view.notifyWrongAnswer(direction!!)
+            }
         }
     }
 

@@ -9,4 +9,6 @@ interface CharactersDeckView: View {
     fun hideDeck()
 
     fun notifyWrongAnswer(direction: String)
+
+    fun notifyLifeLost()
 }
