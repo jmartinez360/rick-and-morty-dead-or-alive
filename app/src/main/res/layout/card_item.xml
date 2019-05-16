@@ -178,34 +178,34 @@
                     />
 
                     <Button
-                            android:id="@+id/alive_button"
+                            android:id="@+id/aliveButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="ALIVE"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintHorizontal_bias="0.5"
-                            app:layout_constraintEnd_toStartOf="@+id/unknown_button"
+                            app:layout_constraintEnd_toStartOf="@+id/unknownButton"
                             app:layout_constraintBottom_toBottomOf="parent"/>
 
                     <Button
-                            android:id="@+id/dead_button"
+                            android:id="@+id/deadButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="DEAD"
-                            app:layout_constraintStart_toEndOf="@+id/unknown_button"
+                            app:layout_constraintStart_toEndOf="@+id/unknownButton"
                             app:layout_constraintHorizontal_bias="0.5"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"/>
 
                     <Button
-                            android:id="@+id/unknown_button"
+                            android:id="@+id/unknownButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="UNKNOWN"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/alive_button"
+                            app:layout_constraintStart_toEndOf="@+id/aliveButton"
                             app:layout_constraintHorizontal_bias="0.5"
-                            app:layout_constraintEnd_toStartOf="@+id/dead_button"
+                            app:layout_constraintEnd_toStartOf="@+id/deadButton"
                     />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

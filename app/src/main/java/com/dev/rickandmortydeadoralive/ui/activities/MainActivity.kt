@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.dev.rickandmortydeadoralive.Injector
 import com.dev.rickandmortydeadoralive.R
 import com.dev.rickandmortydeadoralive.models.Character
+import com.dev.rickandmortydeadoralive.ui.adapters.CardClickListener
 import com.dev.rickandmortydeadoralive.ui.adapters.CharacterCardsAdapter
 import com.dev.rickandmortydeadoralive.ui.presenters.CharactersDeckPresenter
 import com.dev.rickandmortydeadoralive.ui.views.CharactersDeckView
@@ -23,12 +24,12 @@ import java.util.*
 import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener {
+class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener, CardClickListener {
 
     @Inject
     lateinit var presenter: CharactersDeckPresenter
 
-    private val adapter by lazy { CharacterCardsAdapter() }
+    private val adapter by lazy { CharacterCardsAdapter(this) }
     private val recycler by lazy { findViewById<CardStackView>(R.id.characterRecycler) }
     private val resetButton by lazy { findViewById<TextView>(R.id.reset) }
     private val manager by lazy { CardStackLayoutManager(this, this) }
@@ -92,7 +93,6 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener 
         manager.setCanScrollVertical(true)
         manager.setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
         manager.setOverlayInterpolator(LinearInterpolator())
-        //manager.setRewindAnimationSetting(rewindSetting)
 
         recycler.layoutManager = manager
         recycler.adapter = adapter
@@ -125,7 +125,7 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener 
     }
 
     override fun onCardDragging(direction: Direction?, ratio: Float) {
-
+        /* no-op */
     }
 
     override fun onCardSwiped(direction: Direction?) {
@@ -133,6 +133,7 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener 
     }
 
     override fun onCardCanceled() {
+        /* no-op */
     }
 
     override fun onCardAppeared(view: View?, position: Int) {
@@ -140,10 +141,40 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener 
     }
 
     override fun onCardRewound() {
-        Log.d("dev rick and morty", "vuelvo a la carta anterior")
+        /* no-op */
     }
 
     override fun onCardDisappeared(view: View?, position: Int) {
         presenter.onCardDisappeared(position)
+    }
+
+    override fun onDeadClickListener(item: Character) {
+        val setting = SwipeAnimationSetting.Builder()
+            .setDirection(Direction.Right)
+            .setDuration(Duration.Normal.duration)
+            .setInterpolator(LinearInterpolator())
+            .build()
+        manager.setSwipeAnimationSetting(setting)
+        recycler.swipe()
+    }
+
+    override fun onAliveClickListener(item: Character) {
+        val setting = SwipeAnimationSetting.Builder()
+            .setDirection(Direction.Left)
+            .setDuration(Duration.Normal.duration)
+            .setInterpolator(LinearInterpolator())
+            .build()
+        manager.setSwipeAnimationSetting(setting)
+        recycler.swipe()
+    }
+
+    override fun onUnknownClickListener(item: Character) {
+        val setting = SwipeAnimationSetting.Builder()
+            .setDirection(Direction.Top)
+            .setDuration(Duration.Normal.duration)
+            .setInterpolator(LinearInterpolator())
+            .build()
+        manager.setSwipeAnimationSetting(setting)
+        recycler.swipe()
     }
 }
