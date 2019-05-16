@@ -18,6 +18,7 @@ import com.dev.rickandmortydeadoralive.utils.CustomDialogClickListener
 import com.dev.rickandmortydeadoralive.utils.cardColors.CardType
 import com.dev.rickandmortydeadoralive.utils.cardColors.GradientCardColor
 import com.yuyakaido.android.cardstackview.*
+import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import javax.inject.Inject
 
@@ -107,8 +108,8 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener 
         recycler.visibility = View.GONE
     }
 
-    override fun notifyLifeLost() {
-        Toast.makeText(this, "Pierdes una vida", Toast.LENGTH_LONG).show()
+    override fun notifyLifes(lifesCounter: Int) {
+        lifeCounter.text = lifesCounter.toString()
     }
 
     override fun notifyWrongAnswer(direction: String) {

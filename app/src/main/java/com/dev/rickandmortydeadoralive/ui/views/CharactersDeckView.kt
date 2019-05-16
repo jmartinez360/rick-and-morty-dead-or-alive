@@ -10,5 +10,5 @@ interface CharactersDeckView: View {
 
     fun notifyWrongAnswer(direction: String)
 
-    fun notifyLifeLost()
+    fun notifyLifes(lifesCounter: Int)
 }

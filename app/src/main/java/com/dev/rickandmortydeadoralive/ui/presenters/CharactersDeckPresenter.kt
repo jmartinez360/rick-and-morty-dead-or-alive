@@ -1,6 +1,5 @@
 package com.dev.rickandmortydeadoralive.ui.presenters
 
-import android.util.Log
 import com.dev.rickandmortydeadoralive.SchedulerInterface
 import com.dev.rickandmortydeadoralive.models.Character
 import com.dev.rickandmortydeadoralive.repository.RemoteCharactersRepository
@@ -33,6 +32,7 @@ class CharactersDeckPresenter @Inject constructor (private val charaterRepositor
 
     fun loadCharacters() {
         lifeCount = MAX_LIFES
+        view.notifyLifes(lifeCount)
         val ids = RandomUtils.getRandomNumberList(LIST_SIZE)
         disposable = charaterRepository.getCharacters(ids)
             .observeOn(schedulerProvider.ui())
@@ -60,7 +60,7 @@ class CharactersDeckPresenter @Inject constructor (private val charaterRepositor
     fun onCardSwiped(direction: String?) {
         if (!direction.equals(correctSwipeDirection)) {
             lifeCount--
-            view.notifyLifeLost()
+            view.notifyLifes(lifeCount)
             if (lifeCount == 0) {
                 view.notifyWrongAnswer(direction!!)
             }
