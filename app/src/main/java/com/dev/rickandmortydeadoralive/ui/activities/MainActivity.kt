@@ -1,18 +1,18 @@
 package com.dev.rickandmortydeadoralive.ui.activities
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
 import com.dev.rickandmortydeadoralive.Injector
 import com.dev.rickandmortydeadoralive.R
 import com.dev.rickandmortydeadoralive.models.Character
 import com.dev.rickandmortydeadoralive.ui.adapters.CardClickListener
 import com.dev.rickandmortydeadoralive.ui.adapters.CharacterCardsAdapter
 import com.dev.rickandmortydeadoralive.ui.presenters.CharactersDeckPresenter
+import com.dev.rickandmortydeadoralive.ui.presenters.CharactersViewModel
 import com.dev.rickandmortydeadoralive.ui.views.CharactersDeckView
 import com.dev.rickandmortydeadoralive.utils.CustomDialog
 import com.dev.rickandmortydeadoralive.utils.CustomDialogClickListener
@@ -29,10 +29,20 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
     @Inject
     lateinit var presenter: CharactersDeckPresenter
 
+    @Inject
+    lateinit var viewModel: CharactersViewModel
+
+    lateinit var characterList: LiveData<List<Character>>
+
     private val adapter by lazy { CharacterCardsAdapter(this) }
     private val recycler by lazy { findViewById<CardStackView>(R.id.characterRecycler) }
     private val resetButton by lazy { findViewById<TextView>(R.id.reset) }
     private val manager by lazy { CardStackLayoutManager(this, this) }
+
+
+    /*private val viewModel: CharactersViewModel by lazy {
+        ViewModelProviders.of(this).get(CharactersViewModel::class.java)
+    }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,43 +52,55 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
 
         val gradientCardType = CardType.ZINC_CARD.cardColor as GradientCardColor
 
-        resetButton.setOnClickListener { presenter.loadCharacters() }
-
+        resetButton.setOnClickListener { viewModel.loadCharacters() }
         presenter.view = this
-        presenter.loadCharacters()
+        lifecycle.addObserver(viewModel)
 
 
-       /* val characterId = findViewById<TextView>(R.id.character_id)
-        val infoContainer = findViewById<LinearLayout>(R.id.info_container)
-        val animationDrawable = AnimationDrawable()
-
-        for (x in 0 until gradientCardType.bodyColor.size) {
-            val gradientDrawable = GradientDrawable()
-
-            var indexFirstColor = x
-            var indexSecondColor = x + 1
-
-            if (x == gradientCardType.bodyColor.size - 1) {
-                indexFirstColor = x
-                indexSecondColor = 0
+        viewModel.characterList.observe(this, androidx.lifecycle.Observer {characters ->
+            if (characters != null && characters.isNotEmpty()) {
+                showCharacters(characters)
             }
+        })
 
-            gradientDrawable.colors = intArrayOf(
-                Color.parseColor(gradientCardType.bodyColor[indexFirstColor]),
-                Color.parseColor(gradientCardType.bodyColor[indexSecondColor])
-            )
+        viewModel.loadCharacters()
 
-            gradientDrawable.gradientType = GradientDrawable.LINEAR_GRADIENT
-            gradientDrawable.orientation = GradientDrawable.Orientation.BR_TL
 
-            animationDrawable.addFrame(gradientDrawable, 2000)
-        }
 
-        characterId.background = animationDrawable
-        infoContainer.background = animationDrawable
-        animationDrawable.setEnterFadeDuration(2000)
-        animationDrawable.setExitFadeDuration(2000)
-        animationDrawable.start() */
+
+
+
+        /* val characterId = findViewById<TextView>(R.id.character_id)
+         val infoContainer = findViewById<LinearLayout>(R.id.info_container)
+         val animationDrawable = AnimationDrawable()
+
+         for (x in 0 until gradientCardType.bodyColor.size) {
+             val gradientDrawable = GradientDrawable()
+
+             var indexFirstColor = x
+             var indexSecondColor = x + 1
+
+             if (x == gradientCardType.bodyColor.size - 1) {
+                 indexFirstColor = x
+                 indexSecondColor = 0
+             }
+
+             gradientDrawable.colors = intArrayOf(
+                 Color.parseColor(gradientCardType.bodyColor[indexFirstColor]),
+                 Color.parseColor(gradientCardType.bodyColor[indexSecondColor])
+             )
+
+             gradientDrawable.gradientType = GradientDrawable.LINEAR_GRADIENT
+             gradientDrawable.orientation = GradientDrawable.Orientation.BR_TL
+
+             animationDrawable.addFrame(gradientDrawable, 2000)
+         }
+
+         characterId.background = animationDrawable
+         infoContainer.background = animationDrawable
+         animationDrawable.setEnterFadeDuration(2000)
+         animationDrawable.setExitFadeDuration(2000)
+         animationDrawable.start() */
     }
 
     fun init() {
@@ -117,7 +139,8 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
         val customDialog = CustomDialog(this,R.drawable.game_over_1, "Game Over!!", "Has perdido tus vidas",
             object : CustomDialogClickListener {
                 override fun onButtonClickListener() {
-                    presenter.loadCharacters()
+                    //presenter.loadCharacters()
+                    viewModel.restart()
                 }
             })
 
@@ -137,7 +160,7 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
     }
 
     override fun onCardAppeared(view: View?, position: Int) {
-        presenter.onCurrentCard(position)
+        //presenter.onCurrentCard(position)
     }
 
     override fun onCardRewound() {

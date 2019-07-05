@@ -25,7 +25,7 @@ allprojects {
 }
 
 ext {
-    retrofit_version = '2.3.0'
+    retrofit_version = '2.5.0'
     rxjava2_version = '2.1.8'
     rxandroid_version = '2.0.1'
     dagger2_version = '2.14.1'
