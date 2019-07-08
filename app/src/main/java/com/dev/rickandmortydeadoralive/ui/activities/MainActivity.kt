@@ -2,10 +2,11 @@ package com.dev.rickandmortydeadoralive.ui.activities
 
 import android.os.Bundle
 import android.view.View
-import android.view.animation.LinearInterpolator
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.dev.rickandmortydeadoralive.Injector
 import com.dev.rickandmortydeadoralive.R
 import com.dev.rickandmortydeadoralive.models.Character
@@ -17,13 +18,17 @@ import com.dev.rickandmortydeadoralive.utils.CustomDialog
 import com.dev.rickandmortydeadoralive.utils.CustomDialogClickListener
 import com.dev.rickandmortydeadoralive.utils.cardColors.CardType
 import com.dev.rickandmortydeadoralive.utils.cardColors.GradientCardColor
-import com.yuyakaido.android.cardstackview.*
+import com.yuyakaido.android.cardstackview.CardStackListener
+import com.yuyakaido.android.cardstackview.Direction
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
 import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener, CardClickListener {
+
+    companion object {
+        private val SPAN_COUNT = 2
+    }
 
     @Inject
     lateinit var viewModel: CharactersViewModel
@@ -31,9 +36,9 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
     lateinit var characterList: LiveData<List<Character>>
 
     private val adapter by lazy { CharacterCardsAdapter(this) }
-    private val recycler by lazy { findViewById<CardStackView>(R.id.characterRecycler) }
+    private val recycler by lazy { findViewById<RecyclerView>(R.id.characterRecycler) }
     private val resetButton by lazy { findViewById<TextView>(R.id.reset) }
-    private val manager by lazy { CardStackLayoutManager(this, this) }
+    private val gridLayoutManager by lazy { GridLayoutManager(this,   SPAN_COUNT) }
 
 
     /*private val viewModel: CharactersViewModel by lazy {
@@ -99,19 +104,7 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
     }
 
     fun init() {
-        manager.setStackFrom(StackFrom.None)
-        manager.setVisibleCount(3)
-        manager.setTranslationInterval(20.0f)
-        manager.setScaleInterval(0.95f)
-        manager.setSwipeThreshold(0.3f)
-        manager.setMaxDegree(50.0f)
-        manager.setDirections(Arrays.asList(Direction.Left, Direction.Top, Direction.Right))
-        manager.setCanScrollHorizontal(true)
-        manager.setCanScrollVertical(true)
-        manager.setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
-        manager.setOverlayInterpolator(LinearInterpolator())
-
-        recycler.layoutManager = manager
+        recycler.layoutManager = gridLayoutManager
         recycler.adapter = adapter
     }
 
@@ -165,32 +158,14 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
     }
 
     override fun onDeadClickListener(item: Character) {
-        val setting = SwipeAnimationSetting.Builder()
-            .setDirection(Direction.Right)
-            .setDuration(Duration.Normal.duration)
-            .setInterpolator(LinearInterpolator())
-            .build()
-        manager.setSwipeAnimationSetting(setting)
-        recycler.swipe()
+
     }
 
     override fun onAliveClickListener(item: Character) {
-        val setting = SwipeAnimationSetting.Builder()
-            .setDirection(Direction.Left)
-            .setDuration(Duration.Normal.duration)
-            .setInterpolator(LinearInterpolator())
-            .build()
-        manager.setSwipeAnimationSetting(setting)
-        recycler.swipe()
+
     }
 
     override fun onUnknownClickListener(item: Character) {
-        val setting = SwipeAnimationSetting.Builder()
-            .setDirection(Direction.Top)
-            .setDuration(Duration.Normal.duration)
-            .setInterpolator(LinearInterpolator())
-            .build()
-        manager.setSwipeAnimationSetting(setting)
-        recycler.swipe()
+
     }
 }

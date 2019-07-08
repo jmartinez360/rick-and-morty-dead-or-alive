@@ -12,7 +12,7 @@ class CharacterCardsAdapter constructor(private val clickListener: CardClickList
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardBindable {
-        return CharacterBasicCardViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.card_item, parent, false), clickListener)
+        return CharacterBasicCardViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.card_grid_item, parent, false), clickListener)
     }
 
     override fun getItemCount(): Int {
