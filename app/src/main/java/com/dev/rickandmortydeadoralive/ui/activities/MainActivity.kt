@@ -11,7 +11,6 @@ import com.dev.rickandmortydeadoralive.R
 import com.dev.rickandmortydeadoralive.models.Character
 import com.dev.rickandmortydeadoralive.ui.adapters.CardClickListener
 import com.dev.rickandmortydeadoralive.ui.adapters.CharacterCardsAdapter
-import com.dev.rickandmortydeadoralive.ui.presenters.CharactersDeckPresenter
 import com.dev.rickandmortydeadoralive.ui.presenters.CharactersViewModel
 import com.dev.rickandmortydeadoralive.ui.views.CharactersDeckView
 import com.dev.rickandmortydeadoralive.utils.CustomDialog
@@ -25,9 +24,6 @@ import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener, CardClickListener {
-
-    @Inject
-    lateinit var presenter: CharactersDeckPresenter
 
     @Inject
     lateinit var viewModel: CharactersViewModel
@@ -53,7 +49,6 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
         val gradientCardType = CardType.ZINC_CARD.cardColor as GradientCardColor
 
         resetButton.setOnClickListener { viewModel.loadCharacters() }
-        presenter.view = this
         lifecycle.addObserver(viewModel)
 
 
@@ -152,7 +147,6 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
     }
 
     override fun onCardSwiped(direction: Direction?) {
-        presenter.onCardSwiped(direction?.name)
     }
 
     override fun onCardCanceled() {
@@ -168,7 +162,6 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
     }
 
     override fun onCardDisappeared(view: View?, position: Int) {
-        presenter.onCardDisappeared(position)
     }
 
     override fun onDeadClickListener(item: Character) {
