@@ -6,5 +6,5 @@ import com.dev.rickandmortydeadoralive.models.Character
 
 abstract class CardBindable constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    abstract fun bindItem(character: Character)
+    abstract fun bindItem(character: Character, viewHolder: RecyclerView.ViewHolder)
 }

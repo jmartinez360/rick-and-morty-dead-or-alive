@@ -6,12 +6,15 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.dev.rickandmortydeadoralive.Injector
 import com.dev.rickandmortydeadoralive.R
 import com.dev.rickandmortydeadoralive.models.Character
-import com.dev.rickandmortydeadoralive.ui.adapters.CardClickListener
+import com.dev.rickandmortydeadoralive.ui.adapters.listeners.CardClickListener
 import com.dev.rickandmortydeadoralive.ui.adapters.CharacterCardsAdapter
+import com.dev.rickandmortydeadoralive.ui.adapters.listeners.ItemTouchHelperCallback
+import com.dev.rickandmortydeadoralive.ui.adapters.listeners.OnStartDragListener
 import com.dev.rickandmortydeadoralive.ui.presenters.CharactersViewModel
 import com.dev.rickandmortydeadoralive.ui.views.CharactersDeckView
 import com.dev.rickandmortydeadoralive.utils.CustomDialog
@@ -24,7 +27,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener, CardClickListener {
+class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
+    CardClickListener, OnStartDragListener {
 
     companion object {
         private val SPAN_COUNT = 2
@@ -35,10 +39,11 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
 
     lateinit var characterList: LiveData<List<Character>>
 
-    private val adapter by lazy { CharacterCardsAdapter(this) }
+    private val adapter by lazy { CharacterCardsAdapter(clickListener = this, dragStartListener = this) }
     private val recycler by lazy { findViewById<RecyclerView>(R.id.characterRecycler) }
     private val resetButton by lazy { findViewById<TextView>(R.id.reset) }
     private val gridLayoutManager by lazy { GridLayoutManager(this,   SPAN_COUNT) }
+    private val itemTouchHelper by lazy { ItemTouchHelper(ItemTouchHelperCallback(adapter)) }
 
 
     /*private val viewModel: CharactersViewModel by lazy {
@@ -106,6 +111,7 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
     fun init() {
         recycler.layoutManager = gridLayoutManager
         recycler.adapter = adapter
+        itemTouchHelper.attachToRecyclerView(recycler)
     }
 
     override fun showCharacters(characterList: List<Character>) {
@@ -167,5 +173,9 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
 
     override fun onUnknownClickListener(item: Character) {
 
+    }
+
+    override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
+        itemTouchHelper.startDrag(viewHolder)
     }
 }

@@ -5,14 +5,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dev.rickandmortydeadoralive.R
 import com.dev.rickandmortydeadoralive.models.Character
+import com.dev.rickandmortydeadoralive.ui.adapters.listeners.CardClickListener
+import com.dev.rickandmortydeadoralive.ui.adapters.listeners.ItemTouchAdapter
+import com.dev.rickandmortydeadoralive.ui.adapters.listeners.OnStartDragListener
+import java.util.*
 
-class CharacterCardsAdapter constructor(private val clickListener: CardClickListener) : RecyclerView.Adapter<CardBindable>() {
+class CharacterCardsAdapter constructor(private val clickListener: CardClickListener, private val dragStartListener: OnStartDragListener) : RecyclerView.Adapter<CardBindable>(), ItemTouchAdapter {
 
     var items : List<Character>? = null
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardBindable {
-        return CharacterBasicCardViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.card_grid_item, parent, false), clickListener)
+        return CharacterBasicCardViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.card_grid_item, parent, false), dragStartListener)
     }
 
     override fun getItemCount(): Int {
@@ -20,7 +24,12 @@ class CharacterCardsAdapter constructor(private val clickListener: CardClickList
     }
 
     override fun onBindViewHolder(holder: CardBindable, position: Int) {
-        holder.bindItem(items!![position])
+        holder.bindItem(items!![position], holder)
     }
 
+    override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
+        Collections.swap(items, fromPosition, toPosition)
+        notifyItemMoved(fromPosition, toPosition)
+        return true
+    }
 }

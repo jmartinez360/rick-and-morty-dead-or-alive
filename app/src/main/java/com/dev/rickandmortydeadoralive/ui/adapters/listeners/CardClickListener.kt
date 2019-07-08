@@ -1,4 +1,4 @@
-package com.dev.rickandmortydeadoralive.ui.adapters
+package com.dev.rickandmortydeadoralive.ui.adapters.listeners
 
 import com.dev.rickandmortydeadoralive.models.Character
 
