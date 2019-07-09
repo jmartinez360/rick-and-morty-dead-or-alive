@@ -2,6 +2,7 @@ package com.dev.rickandmortydeadoralive.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.dev.rickandmortydeadoralive.R
 import com.dev.rickandmortydeadoralive.models.Character
@@ -12,7 +13,12 @@ import java.util.*
 
 class CharacterCardsAdapter constructor(private val clickListener: CardClickListener, private val dragStartListener: OnStartDragListener) : RecyclerView.Adapter<CardBindable>(), ItemTouchAdapter {
 
-    var items : List<Character>? = null
+    var items : List<Character> = emptyList()
+    set(newItems) {
+        val result = DiffUtil.calculateDiff(CharacterListDiffUtilCallback(field, newItems))
+        result.dispatchUpdatesTo(this)
+        field = newItems
+    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardBindable {
@@ -20,11 +26,11 @@ class CharacterCardsAdapter constructor(private val clickListener: CardClickList
     }
 
     override fun getItemCount(): Int {
-        return if (items == null) 0 else items!!.size
+        return items.size
     }
 
     override fun onBindViewHolder(holder: CardBindable, position: Int) {
-        holder.bindItem(items!![position], holder)
+        holder.bindItem(items[position], holder)
     }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
