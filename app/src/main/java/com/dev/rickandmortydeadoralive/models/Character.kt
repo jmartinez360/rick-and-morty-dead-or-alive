@@ -9,3 +9,7 @@ data class Character(val id: Int, val name: String, val species: String, val sta
 }
 
 data class Origin(val name: String)
+
+data class Pagination(val next: String)
+
+data class AllCharactersResult(val info: Pagination, val results: List<Character>)

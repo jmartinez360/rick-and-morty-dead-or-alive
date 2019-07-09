@@ -1,10 +1,12 @@
 package com.dev.rickandmortydeadoralive.ui.activities
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +15,7 @@ import com.dev.rickandmortydeadoralive.R
 import com.dev.rickandmortydeadoralive.models.Character
 import com.dev.rickandmortydeadoralive.ui.adapters.listeners.CardClickListener
 import com.dev.rickandmortydeadoralive.ui.adapters.CharacterCardsAdapter
+import com.dev.rickandmortydeadoralive.ui.adapters.CustomScrollListener
 import com.dev.rickandmortydeadoralive.ui.adapters.listeners.ItemTouchHelperCallback
 import com.dev.rickandmortydeadoralive.ui.adapters.listeners.OnStartDragListener
 import com.dev.rickandmortydeadoralive.ui.presenters.CharactersViewModel
@@ -39,6 +42,10 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
 
     lateinit var characterList: LiveData<List<Character>>
 
+    private var isLoading = false
+    private var isLastPage = false
+
+
     private val adapter by lazy { CharacterCardsAdapter(clickListener = this, dragStartListener = this) }
     private val recycler by lazy { findViewById<RecyclerView>(R.id.characterRecycler) }
     private val resetButton by lazy { findViewById<TextView>(R.id.reset) }
@@ -64,7 +71,25 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
 
         viewModel.characterListToPrint.observe(this, androidx.lifecycle.Observer { characters ->
             if (characters != null && characters.isNotEmpty()) {
+                Log.d("pagina", "recibo para pintar")
+
                 showCharacters(characters)
+            }
+        })
+
+        viewModel.isLastPage.observe(this, Observer {
+            if (it != null) {
+                isLastPage = it
+                Log.d("pagina", "es ultima pagina? $isLastPage")
+
+            }
+        })
+
+        viewModel.isLoading.observe(this, Observer {
+            if (it != null) {
+                isLoading = it
+                Log.d("pagina", "está cargando? $isLoading")
+
             }
         })
 
@@ -113,6 +138,21 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
         recycler.layoutManager = gridLayoutManager
         recycler.adapter = adapter
         itemTouchHelper.attachToRecyclerView(recycler)
+
+        recycler.addOnScrollListener(object : CustomScrollListener(gridLayoutManager) {
+            override fun isLastPage(): Boolean {
+                return isLastPage
+            }
+
+            override fun isLoading(): Boolean {
+                return isLoading
+            }
+
+            override fun loadMoreItems() {
+                viewModel.nextPage()
+            }
+
+        })
     }
 
     override fun showCharacters(characterList: List<Character>) {
