@@ -18,6 +18,7 @@
     >
 
         <TextView
+                android:id="@+id/lifeCounter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="16dp"
@@ -29,7 +30,6 @@
         />
 
         <TextView
-                android:id="@+id/lifeCounter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingEnd="16dp"

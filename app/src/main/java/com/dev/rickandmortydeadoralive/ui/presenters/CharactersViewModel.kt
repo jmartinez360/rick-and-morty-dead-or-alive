@@ -17,18 +17,32 @@ class CharactersViewModel @Inject constructor (private val charaterRepository: R
 
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    var characterList = MutableLiveData<List<Character>>()
+    var allCharacters = ArrayList<Character>()
+
+
+    var characterListToPrint = MutableLiveData<List<Character>>()
     var errorLiveData = MutableLiveData<String>()
 
     fun loadCharacters() {
         scope.launch {
-            val ids = RandomUtils.getRandomNumberList(listSize = 10)
+            val ids = RandomUtils.getRandomNumberList(listSize = 30)
             val value = charaterRepository.getSuspendedCharacters(ids)
             when (value) {
-                is ApiResult.Success -> characterList.postValue(value.data)
+                is ApiResult.Success -> printCharacterList(value.data)
                 is ApiResult.Error -> errorLiveData.postValue(value.exception.message)
             }
         }
+    }
+
+    fun filterInLocal(filter: String) {
+        scope.launch {
+            characterListToPrint.postValue(allCharacters.filter { item -> item.status.toUpperCase() == filter })
+        }
+    }
+
+    private fun printCharacterList(value: List<Character>) {
+        allCharacters.addAll(value)
+        characterListToPrint.postValue(value)
     }
 
     fun restart() {

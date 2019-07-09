@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
         lifecycle.addObserver(viewModel)
 
 
-        viewModel.characterList.observe(this, androidx.lifecycle.Observer {characters ->
+        viewModel.characterListToPrint.observe(this, androidx.lifecycle.Observer { characters ->
             if (characters != null && characters.isNotEmpty()) {
                 showCharacters(characters)
             }
@@ -109,6 +109,7 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
     }
 
     fun init() {
+        lifeCounter.setOnClickListener { viewModel.filterInLocal("ALIVE") }
         recycler.layoutManager = gridLayoutManager
         recycler.adapter = adapter
         itemTouchHelper.attachToRecyclerView(recycler)
@@ -117,7 +118,7 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
     override fun showCharacters(characterList: List<Character>) {
         recycler.visibility = View.VISIBLE
         adapter.items = characterList
-        adapter.notifyDataSetChanged()
+        //adapter.notifyDataSetChanged()
     }
 
     override fun hideDeck() {
