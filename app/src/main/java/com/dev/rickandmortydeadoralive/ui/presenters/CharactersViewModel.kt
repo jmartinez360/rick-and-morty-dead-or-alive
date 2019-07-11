@@ -62,7 +62,7 @@ class CharactersViewModel @Inject constructor (private val characterRepository: 
 
     fun filterInLocal(filter: String) {
         scope.launch {
-            characterListToPrint.postValue(allCharacters.filter { item -> item.status.toUpperCase() == filter })
+            characterListToPrint.postValue(allCharacters.filter { item -> item.status.toUpperCase() == filter.toUpperCase() })
         }
     }
 

@@ -28,6 +28,9 @@ import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.Direction
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
+import android.content.DialogInterface
+
+import androidx.appcompat.app.AlertDialog
 
 
 class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
@@ -96,7 +99,7 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
     }
 
     fun init() {
-        lifeCounter.setOnClickListener { viewModel.filterInLocal("ALIVE") }
+        lifeCounter.setOnClickListener { showFilterDialog() }
         recycler.layoutManager = gridLayoutManager
         recycler.setHasFixedSize(true)
         recycler.adapter = adapter
@@ -123,6 +126,16 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
         recycler.visibility = View.VISIBLE
         adapter.items = characterList
         //adapter.notifyDataSetChanged()
+    }
+
+    private fun showFilterDialog() {
+        val builder = AlertDialog.Builder(this)
+        val filters = arrayOf("dead", "alive", "male", "female")
+        builder.setTitle("Elige filtro")
+            .setItems(filters, DialogInterface.OnClickListener { dialog, which ->
+                viewModel.filterInLocal(filter = filters[which])
+            })
+        builder.create().show()
     }
 
     override fun hideDeck() {
