@@ -1,11 +1,11 @@
 package com.dev.rickandmortydeadoralive.ui.adapters
 
+import android.net.Uri
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.dev.rickandmortydeadoralive.models.Character
 import com.dev.rickandmortydeadoralive.ui.adapters.listeners.ItemTouchViewHolder
 import com.dev.rickandmortydeadoralive.ui.adapters.listeners.OnStartDragListener
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.card_item.view.*
 
 
@@ -17,7 +17,7 @@ class CharacterBasicCardViewHolder internal constructor(itemView: View, private 
         this.characterItem = character
 
         itemView.characterId.text = "No. " + characterItem.id
-        Picasso.get().load(character.image).into(itemView.charachterImage)
+        itemView.charachterImage.setImageURI(Uri.parse(characterItem.image))
 
         itemView.setOnLongClickListener {
             onDragListener.onStartDrag(viewHolder)

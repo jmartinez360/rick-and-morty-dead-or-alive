@@ -10,7 +10,6 @@ import com.dev.rickandmortydeadoralive.models.Character
 import com.dev.rickandmortydeadoralive.repository.RemoteCharactersRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
