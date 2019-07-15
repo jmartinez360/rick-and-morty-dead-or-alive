@@ -7,4 +7,5 @@
     <color name="cardDetail">#FDCA27</color>
     <color name="colorGreen_A400">#00E676</color>
     <color name="colorGreen_900">#1B5E20</color>
+    <color name="filter_text">#ffa000</color>
 </resources>

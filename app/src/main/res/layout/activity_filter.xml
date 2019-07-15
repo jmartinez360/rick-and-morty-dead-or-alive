@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@color/deckBackground"
+        tools:context=".ui.activities.FilterActivity">
+
+
+    <TextView
+            android:id="@+id/nameFilerLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Filtro por nombre"
+            android:textStyle="bold"
+            android:padding="16dp"
+            android:textSize="20sp"
+            android:textColor="@color/filter_text"
+            app:layout_constraintTop_toTopOf="parent"
+
+    />
+
+    <EditText
+            android:id="@+id/filteredNameEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:padding="16dp"
+            android:textSize="20sp"
+            android:textColor="@color/filter_text"
+            app:layout_constraintTop_toBottomOf="@id/nameFilerLabel"
+    />
+
+    <TextView
+            android:id="@+id/statusFilterLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Filtro por estado"
+            android:textStyle="bold"
+            android:padding="16dp"
+            android:textSize="20sp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/filter_text"
+            app:layout_constraintTop_toBottomOf="@id/filteredNameEdit"
+
+    />
+
+    <TextView
+            android:id="@+id/currentFilteredStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
+            android:paddingBottom="16dp"
+            android:paddingTop="8dp"
+            android:textSize="18sp"
+            android:textColor="@color/filter_text"
+            app:layout_constraintTop_toBottomOf="@id/statusFilterLabel"
+            tools:text="Alive"
+
+    />
+
+    <TextView
+            android:id="@+id/genderFilterLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Filtro por género"
+            android:textStyle="bold"
+            android:padding="16dp"
+            android:textSize="20sp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/filter_text"
+            app:layout_constraintTop_toBottomOf="@id/currentFilteredStatusText"
+
+    />
+
+    <TextView
+            android:id="@+id/currentFilteredGenderText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
+            android:paddingBottom="16dp"
+            android:paddingTop="8dp"
+            android:textSize="18sp"
+            android:textColor="@color/filter_text"
+            app:layout_constraintTop_toBottomOf="@id/genderFilterLabel"
+            tools:text="Female"
+
+    />
+
+
+    <Button
+            android:id="@+id/acceptButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Guardar cambios"
+            app:layout_constraintTop_toBottomOf="@id/currentFilteredGenderText"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+    />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
