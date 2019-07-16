@@ -19,7 +19,7 @@ class RemoteCharactersDataSource @Inject constructor(private val charactersApiSe
             if (response.isSuccessful) {
                 ApiResult.Success(response.body()!!)
             } else {
-                ApiResult.Error(IOException("Error consultando el endpoint"))
+                ApiResult.Error(IOException(response.message()))
             }
         }, errorMessage = "error")
     }

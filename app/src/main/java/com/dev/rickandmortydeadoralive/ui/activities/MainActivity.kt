@@ -1,11 +1,14 @@
 package com.dev.rickandmortydeadoralive.ui.activities
 
-import android.app.Activity
 import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -21,6 +24,7 @@ import com.dev.rickandmortydeadoralive.ui.adapters.listeners.ItemTouchHelperCall
 import com.dev.rickandmortydeadoralive.ui.adapters.listeners.OnStartDragListener
 import com.dev.rickandmortydeadoralive.ui.presenters.CharactersViewModel
 import com.dev.rickandmortydeadoralive.ui.views.CharactersDeckView
+import com.dev.rickandmortydeadoralive.utils.Constants
 import com.dev.rickandmortydeadoralive.utils.CustomDialog
 import com.dev.rickandmortydeadoralive.utils.CustomDialogClickListener
 import com.dev.rickandmortydeadoralive.utils.PreCachingLayoutManager
@@ -30,11 +34,6 @@ import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.Direction
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
-import android.content.DialogInterface
-import android.content.Intent
-
-import androidx.appcompat.app.AlertDialog
-import com.dev.rickandmortydeadoralive.utils.Constants
 
 
 class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
@@ -75,12 +74,9 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
         val gradientCardType = CardType.ZINC_CARD.cardColor as GradientCardColor
 
         lifecycle.addObserver(viewModel)
-
-
         viewModel.characterListToPrint.observe(this, androidx.lifecycle.Observer { characters ->
-            if (characters != null && characters.isNotEmpty()) {
+            if (characters != null) {
                 Log.d("pagina", "recibo para pintar")
-
                 showCharacters(characters)
             }
         })
@@ -98,6 +94,12 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
                 isLoading = it
                 Log.d("pagina", "está cargando? $isLoading")
 
+            }
+        })
+
+        viewModel.errorLiveData.observe(this, Observer {
+            it?.let { message ->
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
             }
         })
 

@@ -8,6 +8,7 @@ import com.dev.rickandmortydeadoralive.api.ApiResult
 import com.dev.rickandmortydeadoralive.models.AllCharactersResult
 import com.dev.rickandmortydeadoralive.models.Character
 import com.dev.rickandmortydeadoralive.repository.RemoteCharactersRepository
+import com.dev.rickandmortydeadoralive.utils.filterTypes.FilterType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,17 +35,24 @@ class CharactersViewModel @Inject constructor (private val characterRepository: 
     fun loadCharacters(filteredName: String?, filteredGender: String?, filteredStatus: String?) {
         allCharacters.clear()
         characterListToPrint.postValue(allCharacters)
+        filters.remove("page")
 
         filteredName?.let {
             filters.put(Character.NAME_FILTER, it)
         }
 
-        filteredGender?.let {
-            filters.put(Character.GENDER_FILTER, it)
+        filteredGender?.apply {
+            when (this) {
+                FilterType.WITHOUT_FILTERING -> filters.remove(Character.GENDER_FILTER)
+                else -> filters[Character.GENDER_FILTER] = this
+            }
         }
 
-        filteredStatus?.let {
-            filters.put(Character.STATUS_FILTER, it)
+        filteredStatus?.apply {
+            when (this) {
+                FilterType.WITHOUT_FILTERING -> filters.remove(Character.STATUS_FILTER)
+                else -> filters[Character.STATUS_FILTER] = this
+            }
         }
 
         loadCharacters(filters)
@@ -66,7 +74,6 @@ class CharactersViewModel @Inject constructor (private val characterRepository: 
     }
 
     fun nextPage() {
-        Log.d("pagina", "cargo siguiente pagina con valor de $nextPagination")
         nextPagination?.let { filters["page"] = it }
         loadCharacters(filters)
     }
