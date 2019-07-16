@@ -20,22 +20,38 @@ class CharactersViewModel @Inject constructor (private val characterRepository: 
     }
 
     private val scope = CoroutineScope(Dispatchers.IO)
-    private var nextPagination: String = ""
+    private var nextPagination: String? = null
+
+    private val filters = mutableMapOf<String, String>()
 
     var allCharacters = ArrayList<Character>()
-
-
     var characterListToPrint = MutableLiveData<List<Character>>()
     var isLoading = MutableLiveData<Boolean>()
     var isLastPage = MutableLiveData<Boolean>()
     var errorLiveData = MutableLiveData<String>()
 
-    fun loadCharacters() {
-        isLastPage.postValue(false)
-        loadCharacters(emptyMap())
+
+    fun loadCharacters(filteredName: String?, filteredGender: String?, filteredStatus: String?) {
+        allCharacters.clear()
+        characterListToPrint.postValue(allCharacters)
+
+        filteredName?.let {
+            filters.put(Character.NAME_FILTER, it)
+        }
+
+        filteredGender?.let {
+            filters.put(Character.GENDER_FILTER, it)
+        }
+
+        filteredStatus?.let {
+            filters.put(Character.STATUS_FILTER, it)
+        }
+
+        loadCharacters(filters)
     }
 
-    fun loadCharacters(options: Map<String, String>) {
+    private fun loadCharacters(options: Map<String, String>) {
+        isLastPage.postValue(false)
         isLoading.postValue(true)
         scope.launch {
             val value = characterRepository.getSuspendedCharacters(options)
@@ -51,13 +67,16 @@ class CharactersViewModel @Inject constructor (private val characterRepository: 
 
     fun nextPage() {
         Log.d("pagina", "cargo siguiente pagina con valor de $nextPagination")
-        val mutableMap = mapOf("page" to nextPagination)
-        loadCharacters(mutableMap)
+        nextPagination?.let { filters["page"] = it }
+        loadCharacters(filters)
     }
 
     private fun getNextPage(value: ApiResult.Success<AllCharactersResult>) {
         val matchResult = PAGINATION_REGEX.find(value.data.info.next)
-        nextPagination = matchResult?.value!!
+        nextPagination = matchResult?.value
+        if (nextPagination == null) {
+            isLastPage.postValue(true)
+        }
     }
 
     fun filterInLocal(filter: String) {
@@ -70,10 +89,6 @@ class CharactersViewModel @Inject constructor (private val characterRepository: 
         allCharacters.addAll(value)
         characterListToPrint.postValue(allCharacters)
         isLoading.postValue(false)
-    }
-
-    fun restart() {
-        loadCharacters()
     }
 
 }

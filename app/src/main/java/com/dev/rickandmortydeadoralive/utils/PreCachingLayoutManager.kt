@@ -4,13 +4,11 @@ import android.content.Context
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class PreCachingLayoutManager : GridLayoutManager {
+class PreCachingLayoutManager(context: Context?) : GridLayoutManager(context, 2) {
     private val defaultExtraLayoutSpace = 600
     private var extraLayoutSpace = -1
-    private var context: Context? = null
 
-    constructor(context: Context?) : super(context, 2) {
-        this.context = context
+    init {
         extraLayoutSpace = defaultExtraLayoutSpace
     }
 

@@ -1,5 +1,7 @@
 package com.dev.rickandmortydeadoralive.ui.activities
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -29,8 +31,10 @@ import com.yuyakaido.android.cardstackview.Direction
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 import android.content.DialogInterface
+import android.content.Intent
 
 import androidx.appcompat.app.AlertDialog
+import com.dev.rickandmortydeadoralive.utils.Constants
 
 
 class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
@@ -38,6 +42,8 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
 
     companion object {
         private val SPAN_COUNT = 2
+        const val REQUEST_CODE = 2
+        const val FILTER_DONE_RESULT_CODE = 3
     }
 
     @Inject
@@ -68,7 +74,6 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
 
         val gradientCardType = CardType.ZINC_CARD.cardColor as GradientCardColor
 
-        resetButton.setOnClickListener { viewModel.loadCharacters() }
         lifecycle.addObserver(viewModel)
 
 
@@ -95,11 +100,12 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
 
             }
         })
-        viewModel.loadCharacters()
+
+        loadCharacters()
     }
 
-    fun init() {
-        lifeCounter.setOnClickListener { showFilterDialog() }
+    private fun init() {
+        lifeCounter.setOnClickListener { openFilter() }
         recycler.layoutManager = gridLayoutManager
         recycler.setHasFixedSize(true)
         recycler.adapter = adapter
@@ -120,6 +126,38 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
             }
 
         })
+    }
+
+    private fun loadCharacters() {
+        val sharedPreferences = getSharedPreferences(Constants.FILTER_PREFERENCES, Context.MODE_PRIVATE)
+        var filteredName: String?
+        var filteredStatus: String?
+        var filteredGender: String?
+
+
+        sharedPreferences.apply {
+            filteredName = getString(Constants.NAME_FILTER, null)
+            filteredStatus = getString(Constants.STATUS_FILTER, null)
+            filteredGender = getString(Constants.GENDER_FILTER, null)
+        }
+
+        viewModel.loadCharacters(
+            filteredName = filteredName,
+            filteredGender = filteredGender,
+            filteredStatus = filteredStatus
+        )
+    }
+
+    private fun openFilter() =
+        startActivityForResult(Intent(this, FilterActivity::class.java), REQUEST_CODE)
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == FILTER_DONE_RESULT_CODE) {
+            Log.d("rick", "estoy aqui con result code $resultCode y rquestCode $requestCode")
+           // adapter.items = emptyList()
+            loadCharacters()
+        }
     }
 
     override fun showCharacters(characterList: List<Character>) {
@@ -152,7 +190,6 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
             object : CustomDialogClickListener {
                 override fun onButtonClickListener() {
                     //presenter.loadCharacters()
-                    viewModel.restart()
                 }
             })
 
