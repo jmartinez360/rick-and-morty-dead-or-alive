@@ -1,14 +1,10 @@
 package com.dev.rickandmortydeadoralive.ui.activities
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -56,7 +52,6 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
 
     private val adapter by lazy { CharacterCardsAdapter(clickListener = this, dragStartListener = this) }
     private val recycler by lazy { findViewById<RecyclerView>(R.id.characterRecycler) }
-    private val resetButton by lazy { findViewById<TextView>(R.id.reset) }
     private val gridLayoutManager by lazy { PreCachingLayoutManager(this) }
     private val itemTouchHelper by lazy { ItemTouchHelper(ItemTouchHelperCallback(adapter)) }
 
@@ -76,7 +71,6 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
         lifecycle.addObserver(viewModel)
         viewModel.characterListToPrint.observe(this, androidx.lifecycle.Observer { characters ->
             if (characters != null) {
-                Log.d("pagina", "recibo para pintar")
                 showCharacters(characters)
             }
         })
@@ -84,16 +78,12 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
         viewModel.isLastPage.observe(this, Observer {
             if (it != null) {
                 isLastPage = it
-                Log.d("pagina", "es ultima pagina? $isLastPage")
-
             }
         })
 
         viewModel.isLoading.observe(this, Observer {
             if (it != null) {
                 isLoading = it
-                Log.d("pagina", "está cargando? $isLoading")
-
             }
         })
 
@@ -103,11 +93,36 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
             }
         })
 
+        viewModel.filtersLiveData.observe(this, Observer { filtersMap ->
+            if (filtersMap.isNotEmpty()) {
+                genderFilterChip.apply {
+                    text = filtersMap[Character.GENDER_FILTER]
+                    visibility =  if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
+                }
+
+                nameFilterChip.apply {
+                    text = filtersMap[Character.NAME_FILTER]
+                    visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
+
+                }
+
+                statusFilterChip.apply {
+                    text = filtersMap[Character.STATUS_FILTER]
+                    visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
+                }
+
+            } else {
+                genderFilterChip.visibility = View.GONE
+                statusFilterChip.visibility = View.GONE
+                nameFilterChip.visibility = View.GONE
+            }
+        })
+
         loadCharacters()
     }
 
     private fun init() {
-        lifeCounter.setOnClickListener { openFilter() }
+        floatingActionButton.setOnClickListener { openFilter() }
         recycler.layoutManager = gridLayoutManager
         recycler.setHasFixedSize(true)
         recycler.adapter = adapter
@@ -156,8 +171,6 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == FILTER_DONE_RESULT_CODE) {
-            Log.d("rick", "estoy aqui con result code $resultCode y rquestCode $requestCode")
-           // adapter.items = emptyList()
             loadCharacters()
         }
     }
@@ -165,17 +178,6 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
     override fun showCharacters(characterList: List<Character>) {
         recycler.visibility = View.VISIBLE
         adapter.items = characterList
-        //adapter.notifyDataSetChanged()
-    }
-
-    private fun showFilterDialog() {
-        val builder = AlertDialog.Builder(this)
-        val filters = arrayOf("dead", "alive", "male", "female")
-        builder.setTitle("Elige filtro")
-            .setItems(filters, DialogInterface.OnClickListener { dialog, which ->
-                viewModel.filterInLocal(filter = filters[which])
-            })
-        builder.create().show()
     }
 
     override fun hideDeck() {
@@ -183,7 +185,7 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
     }
 
     override fun notifyLifes(lifesCounter: Int) {
-        lifeCounter.text = lifesCounter.toString()
+       /* no-op */
     }
 
     override fun notifyWrongAnswer(direction: String) {

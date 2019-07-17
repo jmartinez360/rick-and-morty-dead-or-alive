@@ -1,6 +1,5 @@
 package com.dev.rickandmortydeadoralive.ui.presenters
 
-import android.util.Log
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -30,6 +29,7 @@ class CharactersViewModel @Inject constructor (private val characterRepository: 
     var isLoading = MutableLiveData<Boolean>()
     var isLastPage = MutableLiveData<Boolean>()
     var errorLiveData = MutableLiveData<String>()
+    var filtersLiveData = MutableLiveData<Map<String, String>>()
 
 
     fun loadCharacters(filteredName: String?, filteredGender: String?, filteredStatus: String?) {
@@ -37,8 +37,11 @@ class CharactersViewModel @Inject constructor (private val characterRepository: 
         characterListToPrint.postValue(allCharacters)
         filters.remove("page")
 
-        filteredName?.let {
-            filters.put(Character.NAME_FILTER, it)
+        filteredName?.apply {
+            when(this.isNotEmpty()) {
+                true -> filters[Character.NAME_FILTER] = this
+                else -> filters.remove(Character.NAME_FILTER)
+            }
         }
 
         filteredGender?.apply {
@@ -55,6 +58,7 @@ class CharactersViewModel @Inject constructor (private val characterRepository: 
             }
         }
 
+        filtersLiveData.postValue(filters)
         loadCharacters(filters)
     }
 

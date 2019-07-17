@@ -9,7 +9,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.dev.rickandmortydeadoralive"
-        minSdkVersion 21
+        minSdkVersion 26
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -64,6 +64,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1"
     implementation 'com.facebook.fresco:fresco:2.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
 
 }
 
