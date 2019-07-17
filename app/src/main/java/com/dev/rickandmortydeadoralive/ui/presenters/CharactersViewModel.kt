@@ -33,8 +33,6 @@ class CharactersViewModel @Inject constructor (private val characterRepository: 
 
 
     fun loadCharacters(filteredName: String?, filteredGender: String?, filteredStatus: String?) {
-        allCharacters.clear()
-        characterListToPrint.postValue(allCharacters)
         filters.remove("page")
 
         filteredName?.apply {
@@ -59,17 +57,17 @@ class CharactersViewModel @Inject constructor (private val characterRepository: 
         }
 
         filtersLiveData.postValue(filters)
-        loadCharacters(filters)
+        loadCharacters(options =  filters, isPaginating = false)
     }
 
-    private fun loadCharacters(options: Map<String, String>) {
+    private fun loadCharacters(options: Map<String, String>, isPaginating: Boolean) {
         isLastPage.postValue(false)
         isLoading.postValue(true)
         scope.launch {
             val value = characterRepository.getSuspendedCharacters(options)
             when (value) {
                 is ApiResult.Success -> {
-                    printCharacterList(value.data.results)
+                    printCharacterList(value.data.results, isPaginating)
                     getNextPage(value)
                 }
                 is ApiResult.Error -> errorLiveData.postValue(value.exception.message)
@@ -79,7 +77,7 @@ class CharactersViewModel @Inject constructor (private val characterRepository: 
 
     fun nextPage() {
         nextPagination?.let { filters["page"] = it }
-        loadCharacters(filters)
+        loadCharacters(options = filters, isPaginating = true)
     }
 
     private fun getNextPage(value: ApiResult.Success<AllCharactersResult>) {
@@ -96,8 +94,8 @@ class CharactersViewModel @Inject constructor (private val characterRepository: 
         }
     }
 
-    private fun printCharacterList(value: List<Character>) {
-        allCharacters.addAll(value)
+    private fun printCharacterList(value: List<Character>, isPaginating: Boolean) {
+        if (isPaginating) allCharacters.addAll(value) else allCharacters = ArrayList(value)
         characterListToPrint.postValue(allCharacters)
         isLoading.postValue(false)
     }

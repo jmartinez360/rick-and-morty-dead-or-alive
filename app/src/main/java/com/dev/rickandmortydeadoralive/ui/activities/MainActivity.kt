@@ -26,6 +26,7 @@ import com.dev.rickandmortydeadoralive.utils.CustomDialogClickListener
 import com.dev.rickandmortydeadoralive.utils.PreCachingLayoutManager
 import com.dev.rickandmortydeadoralive.utils.cardColors.CardType
 import com.dev.rickandmortydeadoralive.utils.cardColors.GradientCardColor
+import com.dev.rickandmortydeadoralive.utils.filterTypes.FilterType
 import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.Direction
 import kotlinx.android.synthetic.main.activity_main.*
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
     private val recycler by lazy { findViewById<RecyclerView>(R.id.characterRecycler) }
     private val gridLayoutManager by lazy { PreCachingLayoutManager(this) }
     private val itemTouchHelper by lazy { ItemTouchHelper(ItemTouchHelperCallback(adapter)) }
+    private val sharedPreferences by lazy { getSharedPreferences(Constants.FILTER_PREFERENCES, Context.MODE_PRIVATE) }
 
 
     /*private val viewModel: CharactersViewModel by lazy {
@@ -94,30 +96,42 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
         })
 
         viewModel.filtersLiveData.observe(this, Observer { filtersMap ->
-            if (filtersMap.isNotEmpty()) {
-                genderFilterChip.apply {
-                    text = filtersMap[Character.GENDER_FILTER]
-                    visibility =  if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
-                }
-
-                nameFilterChip.apply {
-                    text = filtersMap[Character.NAME_FILTER]
-                    visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
-
-                }
-
-                statusFilterChip.apply {
-                    text = filtersMap[Character.STATUS_FILTER]
-                    visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
-                }
-
-            } else {
-                genderFilterChip.visibility = View.GONE
-                statusFilterChip.visibility = View.GONE
-                nameFilterChip.visibility = View.GONE
-            }
+            setupFiltersInfo(filtersMap)
         })
 
+        loadCharacters()
+    }
+
+    private fun setupFiltersInfo(filtersMap: Map<String, String>) {
+        if (filtersMap.isNotEmpty()) {
+            genderFilterChip.apply {
+                text = filtersMap[Character.GENDER_FILTER]
+                visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
+                setOnCloseIconClickListener { removeFilter(Constants.GENDER_FILTER) }
+            }
+
+            nameFilterChip.apply {
+                text = filtersMap[Character.NAME_FILTER]
+                visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
+                setOnCloseIconClickListener { removeFilter(Constants.NAME_FILTER) }
+
+            }
+
+            statusFilterChip.apply {
+                text = filtersMap[Character.STATUS_FILTER]
+                visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
+                setOnCloseIconClickListener { removeFilter(Constants.STATUS_FILTER) }
+            }
+
+        } else {
+            genderFilterChip.visibility = View.GONE
+            statusFilterChip.visibility = View.GONE
+            nameFilterChip.visibility = View.GONE
+        }
+    }
+
+    private fun removeFilter(filterKey: String) {
+        sharedPreferences.edit().remove(filterKey).apply()
         loadCharacters()
     }
 
@@ -146,16 +160,15 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
     }
 
     private fun loadCharacters() {
-        val sharedPreferences = getSharedPreferences(Constants.FILTER_PREFERENCES, Context.MODE_PRIVATE)
         var filteredName: String?
         var filteredStatus: String?
         var filteredGender: String?
 
 
         sharedPreferences.apply {
-            filteredName = getString(Constants.NAME_FILTER, null)
-            filteredStatus = getString(Constants.STATUS_FILTER, null)
-            filteredGender = getString(Constants.GENDER_FILTER, null)
+            filteredName = getString(Constants.NAME_FILTER, "")
+            filteredStatus = getString(Constants.STATUS_FILTER, FilterType.WITHOUT_FILTERING)
+            filteredGender = getString(Constants.GENDER_FILTER, FilterType.WITHOUT_FILTERING)
         }
 
         viewModel.loadCharacters(
