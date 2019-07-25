@@ -1,6 +1,8 @@
 package com.dev.rickandmortydeadoralive.models
 
-data class Character(val id: Int, val name: String, val species: String, val status: String, val image: String, val origin : Origin, val gender: String) {
+import java.io.Serializable
+
+data class Character(val id: Int, val name: String, val species: String, val status: String, val image: String, val origin : Origin, val gender: String): Serializable {
     companion object {
         const val ALIVE = "Alive"
         const val DEAD = "Dead"
@@ -14,7 +16,7 @@ data class Character(val id: Int, val name: String, val species: String, val sta
     }
 }
 
-data class Origin(val name: String)
+data class Origin(val name: String): Serializable
 
 data class Pagination(val next: String)
 

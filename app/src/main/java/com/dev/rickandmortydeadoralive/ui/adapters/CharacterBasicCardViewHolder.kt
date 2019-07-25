@@ -6,11 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dev.rickandmortydeadoralive.R
 import com.dev.rickandmortydeadoralive.models.Character
 import com.dev.rickandmortydeadoralive.ui.adapters.listeners.ItemTouchViewHolder
-import com.dev.rickandmortydeadoralive.ui.adapters.listeners.OnStartDragListener
+import com.dev.rickandmortydeadoralive.ui.adapters.listeners.CardListener
 import kotlinx.android.synthetic.main.card_grid_item.view.*
 
 
-class CharacterBasicCardViewHolder internal constructor(itemView: View, private val onDragListener: OnStartDragListener) : CardBindable(itemView), ItemTouchViewHolder {
+class CharacterBasicCardViewHolder internal constructor(itemView: View, private val onDragListener: CardListener) : CardBindable(itemView), ItemTouchViewHolder {
 
     private lateinit var characterItem: Character
 
@@ -25,6 +25,8 @@ class CharacterBasicCardViewHolder internal constructor(itemView: View, private 
             true
         }
         itemView.genderImage.setImageResource(getGenderDrawable(characterItem))
+
+        itemView.setOnClickListener { onDragListener.onCharacterClickListener(characterItem) }
     }
 
     private fun getGenderDrawable(character: Character): Int {

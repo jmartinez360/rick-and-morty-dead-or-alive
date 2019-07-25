@@ -8,14 +8,14 @@ import com.dev.rickandmortydeadoralive.R
 import com.dev.rickandmortydeadoralive.models.Character
 import com.dev.rickandmortydeadoralive.ui.adapters.listeners.CardClickListener
 import com.dev.rickandmortydeadoralive.ui.adapters.listeners.ItemTouchAdapter
-import com.dev.rickandmortydeadoralive.ui.adapters.listeners.OnStartDragListener
+import com.dev.rickandmortydeadoralive.ui.adapters.listeners.CardListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 
-class CharacterCardsAdapter constructor(private val clickListener: CardClickListener, private val dragStartListener: OnStartDragListener) : RecyclerView.Adapter<CardBindable>(), ItemTouchAdapter {
+class CharacterCardsAdapter constructor(private val dragStartListener: CardListener) : RecyclerView.Adapter<CardBindable>(), ItemTouchAdapter {
 
     private val ioScope = CoroutineScope(Dispatchers.IO)
     private val uiScope = CoroutineScope(Dispatchers.Main)

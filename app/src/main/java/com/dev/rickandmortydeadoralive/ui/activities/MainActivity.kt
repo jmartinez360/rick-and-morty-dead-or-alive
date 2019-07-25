@@ -15,9 +15,8 @@ import com.dev.rickandmortydeadoralive.R
 import com.dev.rickandmortydeadoralive.models.Character
 import com.dev.rickandmortydeadoralive.ui.adapters.CharacterCardsAdapter
 import com.dev.rickandmortydeadoralive.ui.adapters.CustomScrollListener
-import com.dev.rickandmortydeadoralive.ui.adapters.listeners.CardClickListener
+import com.dev.rickandmortydeadoralive.ui.adapters.listeners.CardListener
 import com.dev.rickandmortydeadoralive.ui.adapters.listeners.ItemTouchHelperCallback
-import com.dev.rickandmortydeadoralive.ui.adapters.listeners.OnStartDragListener
 import com.dev.rickandmortydeadoralive.ui.presenters.CharactersViewModel
 import com.dev.rickandmortydeadoralive.ui.views.CharactersDeckView
 import com.dev.rickandmortydeadoralive.utils.Constants
@@ -27,14 +26,11 @@ import com.dev.rickandmortydeadoralive.utils.PreCachingLayoutManager
 import com.dev.rickandmortydeadoralive.utils.cardColors.CardType
 import com.dev.rickandmortydeadoralive.utils.cardColors.GradientCardColor
 import com.dev.rickandmortydeadoralive.utils.filterTypes.FilterType
-import com.yuyakaido.android.cardstackview.CardStackListener
-import com.yuyakaido.android.cardstackview.Direction
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
-    CardClickListener, OnStartDragListener {
+class MainActivity : AppCompatActivity(), CharactersDeckView, CardListener {
 
     companion object {
         private val SPAN_COUNT = 2
@@ -51,7 +47,7 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
     private var isLastPage = false
 
 
-    private val adapter by lazy { CharacterCardsAdapter(clickListener = this, dragStartListener = this) }
+    private val adapter by lazy { CharacterCardsAdapter(dragStartListener = this) }
     private val recycler by lazy { findViewById<RecyclerView>(R.id.characterRecycler) }
     private val gridLayoutManager by lazy { PreCachingLayoutManager(this) }
     private val itemTouchHelper by lazy { ItemTouchHelper(ItemTouchHelperCallback(adapter)) }
@@ -213,38 +209,8 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardStackListener,
         customDialog.showDialog()
     }
 
-    override fun onCardDragging(direction: Direction?, ratio: Float) {
-        /* no-op */
-    }
-
-    override fun onCardSwiped(direction: Direction?) {
-    }
-
-    override fun onCardCanceled() {
-        /* no-op */
-    }
-
-    override fun onCardAppeared(view: View?, position: Int) {
-        //presenter.onCurrentCard(position)
-    }
-
-    override fun onCardRewound() {
-        /* no-op */
-    }
-
-    override fun onCardDisappeared(view: View?, position: Int) {
-    }
-
-    override fun onDeadClickListener(item: Character) {
-
-    }
-
-    override fun onAliveClickListener(item: Character) {
-
-    }
-
-    override fun onUnknownClickListener(item: Character) {
-
+    override fun onCharacterClickListener(character: Character) {
+        startActivity(CharacterDetailActivity.getIntent(character, context = this))
     }
 
     override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
