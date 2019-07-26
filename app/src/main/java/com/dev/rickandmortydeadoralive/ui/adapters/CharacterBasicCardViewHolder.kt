@@ -3,10 +3,10 @@ package com.dev.rickandmortydeadoralive.ui.adapters
 import android.net.Uri
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.dev.rickandmortydeadoralive.R
 import com.dev.rickandmortydeadoralive.models.Character
-import com.dev.rickandmortydeadoralive.ui.adapters.listeners.ItemTouchViewHolder
 import com.dev.rickandmortydeadoralive.ui.adapters.listeners.CardListener
+import com.dev.rickandmortydeadoralive.ui.adapters.listeners.ItemTouchViewHolder
+import com.dev.rickandmortydeadoralive.utils.GenderUtils
 import kotlinx.android.synthetic.main.card_grid_item.view.*
 
 
@@ -24,23 +24,9 @@ class CharacterBasicCardViewHolder internal constructor(itemView: View, private 
             onDragListener.onStartDrag(viewHolder)
             true
         }
-        itemView.genderImage.setImageResource(getGenderDrawable(characterItem))
+        itemView.genderImage.setImageResource(GenderUtils.getGenderDrawable(characterItem.gender))
 
         itemView.setOnClickListener { onDragListener.onCharacterClickListener(characterItem) }
-    }
-
-    private fun getGenderDrawable(character: Character): Int {
-
-        return when (character.gender) {
-            Character.FEMALE_GENDER -> R.drawable.ic_female_gender
-
-            Character.MALE_GENDER -> R.drawable.ic_male_gender
-
-            Character.GENDERLESS -> R.drawable.ic_genderless_gender
-
-            else -> R.drawable.ic_unknown_gender
-        }
-
     }
 
     override fun onItemSelected() {

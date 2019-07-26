@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.dev.rickandmortydeadoralive.R
 import com.dev.rickandmortydeadoralive.models.Character
+import com.dev.rickandmortydeadoralive.utils.GenderUtils
 import kotlinx.android.synthetic.main.activity_character_detail.*
 
 class CharacterDetailActivity : AppCompatActivity() {
@@ -23,6 +24,7 @@ class CharacterDetailActivity : AppCompatActivity() {
         charachterImage.setImageURI(Uri.parse(characterModel.image))
         specie.text = characterModel.species
         origin.text = characterModel.origin.name
+        genderImage.setImageResource(GenderUtils.getGenderDrawable(characterModel.gender))
 
     }
 

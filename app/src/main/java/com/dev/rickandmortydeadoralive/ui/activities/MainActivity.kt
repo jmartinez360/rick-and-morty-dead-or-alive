@@ -53,11 +53,6 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardListener {
     private val itemTouchHelper by lazy { ItemTouchHelper(ItemTouchHelperCallback(adapter)) }
     private val sharedPreferences by lazy { getSharedPreferences(Constants.FILTER_PREFERENCES, Context.MODE_PRIVATE) }
 
-
-    /*private val viewModel: CharactersViewModel by lazy {
-        ViewModelProviders.of(this).get(CharactersViewModel::class.java)
-    }*/
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
