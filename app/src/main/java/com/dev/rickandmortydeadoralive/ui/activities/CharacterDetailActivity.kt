@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.dev.rickandmortydeadoralive.R
 import com.dev.rickandmortydeadoralive.models.Character
 import com.dev.rickandmortydeadoralive.utils.GenderUtils
+import com.dev.rickandmortydeadoralive.utils.ShareImageUtils
 import kotlinx.android.synthetic.main.activity_character_detail.*
 
 class CharacterDetailActivity : AppCompatActivity() {
@@ -21,10 +22,11 @@ class CharacterDetailActivity : AppCompatActivity() {
 
         characterId.text =  "No. ${characterModel.id}"
         characterName.text = characterModel.name
-        charachterImage.setImageURI(Uri.parse(characterModel.image))
+        characterImage.setImageURI(Uri.parse(characterModel.image))
         specie.text = characterModel.species
         origin.text = characterModel.origin.name
         genderImage.setImageResource(GenderUtils.getGenderDrawable(characterModel.gender))
+        shareIcon.setOnClickListener { ShareImageUtils.shareImage(this, characterModel.image, characterModel.name) }
 
     }
 

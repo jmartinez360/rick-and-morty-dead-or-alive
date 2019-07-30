@@ -25,6 +25,17 @@
     >
 
 
+        <ImageView
+                android:id="@+id/shareIcon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_share"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:padding="8dp"
+                android:elevation="6dp"
+        />
+
         <com.github.florent37.shapeofview.shapes.CutCornerView
                 android:id="@+id/clipCorner"
                 android:layout_width="100dp"
@@ -71,7 +82,7 @@
         >
 
             <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/charachterImage"
+                    android:id="@+id/characterImage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@drawable/sample_character"
