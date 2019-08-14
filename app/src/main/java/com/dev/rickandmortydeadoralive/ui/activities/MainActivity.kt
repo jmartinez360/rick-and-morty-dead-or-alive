@@ -77,12 +77,14 @@ class MainActivity : AppCompatActivity(), CharactersDeckView, CardListener {
         viewModel.isLoading.observe(this, Observer {
             if (it != null) {
                 isLoading = it
+                progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
             }
         })
 
         viewModel.errorLiveData.observe(this, Observer {
             it?.let { message ->
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                progressBar.visibility = View.GONE
             }
         })
 

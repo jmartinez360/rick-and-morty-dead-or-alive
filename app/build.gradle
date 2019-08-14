@@ -65,6 +65,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1"
     implementation 'com.facebook.fresco:fresco:2.0.0'
     implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.github.castorflex.smoothprogressbar:library:1.1.0'
 
 }
 
