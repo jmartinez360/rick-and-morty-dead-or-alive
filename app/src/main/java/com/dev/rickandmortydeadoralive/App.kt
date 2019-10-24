@@ -2,6 +2,7 @@ package com.dev.rickandmortydeadoralive
 
 import android.app.Application
 import android.content.Context
+import com.facebook.drawee.backends.pipeline.Fresco
 
 class App : Application() {
 
@@ -20,6 +21,7 @@ class App : Application() {
         // Dagger
         injector = Injector.create(this)
         injector!!.inject(this)
+        Fresco.initialize(this)
 
     }
 }

@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">Rick and Morty Dead or Alive</string>
+    <string-array
+            name="filter_array">
+        <item>Alive</item>
+        <item>Dead</item>
+        <item>unknown</item>
+        <item>Female</item>
+        <item>Male</item>
+    </string-array>
 </resources>

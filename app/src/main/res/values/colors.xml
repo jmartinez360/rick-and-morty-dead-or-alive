@@ -3,4 +3,23 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="deckBackground">#453B60</color>
+    <color name="cardDetail">#FDCA27</color>
+    <color name="colorGreen_A400">#00E676</color>
+    <color name="colorGreen_900">#1B5E20</color>
+    <color name="filter_text">#ffa000</color>
+    <color name="progress_color_1">	#00ff9f</color>
+    <color name="progress_color_2">#00b8ff</color>
+    <color name="progress_color_3">#001eff</color>
+    <color name="progress_color_4">	#bd00ff</color>
+    <color name="progress_color_5">		#d600ff</color>
+
+    <integer-array name="progress_color">
+        <item>@color/progress_color_1</item>
+        <item>@color/progress_color_2</item>
+        <item>@color/progress_color_3</item>
+        <item>@color/progress_color_4</item>
+        <item>@color/progress_color_5</item>
+    </integer-array>
+
 </resources>
